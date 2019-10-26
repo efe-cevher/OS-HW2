@@ -2,10 +2,10 @@
 #include<stdlib.h>
 
 struct stack {
-int top;
-int capacity;
-int* task;
-int* values;
+    int top;
+    int capacity;
+    int* task;
+    int* values;
 };
 
 typedef struct stack Stack;

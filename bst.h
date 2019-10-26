@@ -10,8 +10,8 @@ struct node{
 typedef struct node Node;
 
 Node* createNode(int value);
-void inorder(Node *root);
+void inorder(Node* root);
 Node* insert(Node* root, int data);
 int search(Node* root, int data);
-Node * minValueNode(Node* node);
+Node* minValueNode(Node* node);
 Node* deleteNode(Node* root, int data); //don’t have to return any value for delete function
