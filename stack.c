@@ -1,5 +1,9 @@
+#include<stdio.h>
+#include<stdlib.h>
+
 #include"stack.h"
 
+/* Initialize stack */
 Stack* createStack(int capacity){
     Stack* stack = (Stack*)malloc(sizeof(Stack)); 
     stack->capacity = capacity; 
@@ -10,28 +14,31 @@ Stack* createStack(int capacity){
 }
 
 int isFull(Stack* stack){ 
-    return stack->top == stack->capacity - 1; 
+    return stack->top == stack->capacity - 1; // returns 0 if it is false, else it is true
 } 
 
 int isEmpty(Stack* stack){ 
-    return stack->top == -1; 
+    return stack->top == -1; // returns 0 if it is false, else it is true
 }
 
-void push(Stack* stack, int t, int item){ 
+void push(Stack* stack, int t, int item){
+    /* Check if stack is full before push */
     if (isFull(stack)){
+        printf("Stack is full, cannot push");
         return;
     }
-    int newTop = ++stack->top;
-
-    stack->task[newTop] = t;
+    int newTop = ++stack->top; // increment top
+    
+    /* Add new task and value */
+    stack->task[newTop] = t; 
     stack->values[newTop] = item;
-
-    printf("%d pushed to stack\n", item); 
 }
 
 int pop(Stack* stack){ 
-    if (isEmpty(stack))
-        return 0; 
-    stack->top = stack->top - 1;
+    /* Check stack is empty before pop*/
+    if (isEmpty(stack)){
+        return 0;
+    }
+    stack->top--; // decrement top
     return 1; 
-} 
+}

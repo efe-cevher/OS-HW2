@@ -1,7 +1,11 @@
+#include<stdio.h>
+#include<stdlib.h>
+
 #include"bst.h"
 
 int searchSteps;
 
+/* Initialize BST node */
 Node* createNode(int value){
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->data = value; 
@@ -9,27 +13,41 @@ Node* createNode(int value){
     return newNode; 
 }
 
+/* Print values of BST in order using recursion */
 void inorder(Node* root){
+    /* Check if root of BST exist */
     if (root != NULL){ 
-        inorder(root->left); 
-        printf("%d \n", root->data); 
-        inorder(root->right); 
-    } 
+        Node* leftNode = root->left;
+        Node* rightNode = root->right;
+
+        if (leftNode != NULL){
+            inorder(leftNode);
+        }
+        printf("%d->", root->data);
+
+        if(rightNode != NULL){
+            inorder(rightNode);
+        }
+    }else{
+        printf("BST is empty, or not initialized");
+    }
 }
 
+/* Insert new node by traversing with recursion */
 Node* insert(Node* root, int data){
-    /* If the tree is empty, return a new node */
+
+    /* Base Case, creating node when reached suitable position*/
     if (root == NULL){
         return createNode(data);
     } 
-    /* Otherwise, recur down the tree */
+
     if (data < root->data){
         root->left  = insert(root->left, data); 
     }
+    /* Used "else if" instead "else" to avoid insertion of duplicate values */
     else if (data > root->data){
         root->right = insert(root->right, data);    
     }
-    /* return the (unchanged) node pointer */
     return root; 
 } 
 
@@ -47,6 +65,7 @@ Node* searchRec(Node* root, int data){
 
 int search(Node* root, int data){
     searchSteps = 0;
+    /* Return -1 if not found else return num of steps */
     if(searchRec(root, data) == NULL){
         return -1;
     }else{
@@ -55,58 +74,45 @@ int search(Node* root, int data){
 }
 
 Node* minValueNode(Node* node){
-    Node* current = node; 
+    Node* target = node;
+    /* Go to the left child until reach leftmost */
+    while (target && target->left != NULL) 
+        target = target->left; 
   
-    /* loop down to find the leftmost leaf */
-    while (current && current->left != NULL) 
-        current = current->left; 
-  
-    return current; 
+    return target; 
 }
 
 Node* deleteNode(Node* root, int data){
-    // base case 
-    if (root == NULL) return root; 
-  
-    // If the key to be deleted is smaller than the root's key, 
-    // then it lies in left subtree 
-    if (data < root->data) 
+    /* Base case */ 
+    if (root == NULL){ 
+        return root; 
+    }
+    /* Go left if smaller than root's val*/
+    if (data < root->data){
         root->left = deleteNode(root->left, data); 
-  
-    // If the key to be deleted is greater than the root's key, 
-    // then it lies in right subtree 
-    else if (data > root->data) 
+    }
+    /* Go right if bigger than root's val*/
+    else if (data > root->data){
         root->right = deleteNode(root->right, data); 
-  
-    // if key is same as root's key, then This is the node 
-    // to be deleted 
-    else
-    { 
-        // node with only one child or no child 
-        if (root->left == NULL) 
-        { 
-            struct node *temp = root->right; 
+    }
+    /* If they are equal this is the node to delete */
+    else{ 
+        Node* tmp;
+        /* No child or one child */
+        if (root->left == NULL){ 
+            tmp = root->right; 
             free(root); 
-            return temp; 
-        } 
-        else if (root->right == NULL) 
-        { 
-            struct node *temp = root->left; 
+            return tmp; 
+
+        }else if (root->right == NULL){ 
+            tmp = root->left; 
             free(root); 
-            return temp; 
+            return tmp; 
         } 
-  
-        // node with two children: Get the inorder successor (smallest 
-        // in the right subtree) 
-        Node* temp = minValueNode(root->right); 
-  
-        // Copy the inorder successor's content to this node 
-        root->data = temp->data; 
-  
-        // Delete the inorder successor 
-        root->right = deleteNode(root->right, temp->data); 
+        /* Has two child, get the smallest one on right subtree (the closest val) */
+        tmp = minValueNode(root->right); 
+        root->data = tmp->data; // copied its value
+        root->right = deleteNode(root->right, tmp->data); // then deleted it
     } 
     return root; 
 }
-
-
